@@ -9,6 +9,7 @@ public interface GithubContract {
     interface View extends BaseView {
 
         void onUserInfo(GithubResponse userInfo);
+        void onSendingData(String bio, String company, String location, String blog);
     }
 
     interface Presenter extends BasePresenter<View> {

@@ -2,10 +2,10 @@ package com.example.consultants.week4daily2.model.data;
 
 import android.util.Log;
 
-import com.example.consultants.week4daily2.MainController;
 import com.example.consultants.week4daily2.model.data.local.LocalDataSource;
 import com.example.consultants.week4daily2.model.data.remote.RemoteDataSource;
 import com.example.consultants.week4daily2.model.githubresponse.GithubResponse;
+import com.example.consultants.week4daily2.ui.github.GithubContract;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -35,9 +35,9 @@ public class GithubRepository {
                 if (response.body() != null)
                 {
                     //tried saving it to a field variable and returning
-                    setResponseBody(response.body());
+                    //setResponseBody(response.body());
                     //then tried singleton controller class
-                    MainController.getInstance().setResponse(response.body());
+                    //MainController.getInstance().setResponse(response.body());
                     //I get a correct response here in logs, but don't know how to get this value back to main UI
                     Log.d(TAG, "onResponse: "+ response.body().getCompany());
                 }
@@ -56,7 +56,6 @@ public class GithubRepository {
     {
         responseBody = response;
     }
-
 }
 
 
