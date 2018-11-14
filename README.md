@@ -13,4 +13,4 @@ Use MVP, RxJava, Gson, Retrofit and Repository pattern.
 
 Screenshot:
 
-![image](https://user-images.githubusercontent.com/44408528/48458169-27dffe80-e793-11e8-9671-e9081284dd59.png)
+![image](https://user-images.githubusercontent.com/44408528/48460850-e05f6f80-e79e-11e8-95d7-c12532ae33bd.png)
