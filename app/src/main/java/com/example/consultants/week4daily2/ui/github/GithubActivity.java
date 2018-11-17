@@ -1,5 +1,6 @@
 package com.example.consultants.week4daily2.ui.github;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,7 +12,9 @@ import com.example.consultants.week4daily2.R;
 import com.example.consultants.week4daily2.model.data.GithubRepository;
 import com.example.consultants.week4daily2.model.data.local.LocalDataSource;
 import com.example.consultants.week4daily2.model.data.remote.RemoteDataSource;
-import com.example.consultants.week4daily2.model.githubresponse.GithubResponse;
+import com.example.consultants.week4daily2.model.githubresponse.RepoResponse;
+
+import java.util.List;
 
 public class GithubActivity extends AppCompatActivity implements GithubContract.View {
 
@@ -45,7 +48,7 @@ public class GithubActivity extends AppCompatActivity implements GithubContract.
                 presenter.getUserInfo(etGithub.getText().toString());
                 break;
             case R.id.btnRepositories:
-
+                presenter.getRepos(etGithub.getText().toString());
                 break;
         }
     }
@@ -57,18 +60,19 @@ public class GithubActivity extends AppCompatActivity implements GithubContract.
     }
 
     @Override
-    public void onUserInfo(GithubResponse userInfo) {
-
-        Log.d(TAG, "userInfo: " + userInfo.getBio());
-
-    }
-
-    //finally got the data to UI, with this method
-    @Override
-    public void onSendingData(String bio, String company, String location, String blog) {
+    public void onUserInfo(String bio, String company, String location, String blog) {
         tvItem1.setText("Bio: " + bio);
         tvItem2.setText("Company: " + company);
         tvItem3.setText("Location: " + location);
         tvItem4.setText("Blog: " + blog);
+    }
+
+    @Override
+    public void onRepos(List<RepoResponse> repoList) {
+        for (int i = 0; i < repoList.size(); i++) {
+            Log.d(TAG, "onRepos: " + repoList.get(i).getName());
+        }
+
+        Intent intent = new Intent(this, RepoActivity.class);
     }
 }

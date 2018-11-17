@@ -2,11 +2,11 @@ package com.example.consultants.week4daily2.ui.github;
 
 import android.util.Log;
 
-import com.example.consultants.week4daily2.MainController;
-import com.example.consultants.week4daily2.model.data.GithubCallback;
 import com.example.consultants.week4daily2.model.data.GithubRepository;
+import com.example.consultants.week4daily2.model.data.RepoCallback;
 import com.example.consultants.week4daily2.model.data.remote.RemoteDataSource;
 import com.example.consultants.week4daily2.model.githubresponse.GithubResponse;
+import com.example.consultants.week4daily2.model.githubresponse.RepoResponse;
 
 import java.util.List;
 
@@ -18,27 +18,31 @@ public class GithubPresenter implements GithubContract.Presenter {
     public static final String TAG = GithubPresenter.class.getSimpleName() + "_TAG";
     GithubContract.View view;
     GithubRepository repository;
-    RemoteDataSource remoteDataSource;
 
     public GithubPresenter(GithubRepository repository, GithubContract.View view) {
         this.repository = repository;
-        remoteDataSource = new RemoteDataSource();
         this.view = view;
     }
 
     @Override
     public void getUserInfo(String login) {
         Log.d(TAG, "getUserInfo: " + login);
+        RemoteDataSource remoteDataSource = repository.getRemoteDataSource();
         remoteDataSource.getUserInfo(login).enqueue(new Callback<GithubResponse>() {
             @Override
             public void onResponse(Call<GithubResponse> call, Response<GithubResponse> response) {
                 //moved this code into Presenter, couldn't get it to work in GithubRepository
                 if (response.body() != null)
                 {
-                    view.onSendingData(response.body().getBio().toString(),
-                            response.body().getCompany().toString(),
-                            response.body().getLocation().toString(),
-                            response.body().getBlog().toString());
+                    String company = "";
+                    if (response.body().getCompany() != null) {
+                        company = response.body().getCompany().toString();
+                    }
+
+                    view.onUserInfo(response.body().getBio(),
+                            company,
+                            response.body().getLocation(),
+                            response.body().getBlog());
                     Log.d(TAG, "onResponse: "+ response.body().getCompany());
                 }
             }
@@ -48,14 +52,23 @@ public class GithubPresenter implements GithubContract.Presenter {
 
             }
         });
+    }
 
+    @Override
+    public void getRepos(String login)
+    {
+        repository.getRepos(login, new RepoCallback() {
+            @Override
+            public void onSuccess(List<RepoResponse> repoList) {
+                Log.d(TAG, "onSuccess: ");
+                view.onRepos(repoList);
+            }
 
-        Log.d(TAG, "Presenter result ");
-
-        //I think this runs before getUserInfo() call finishes, and its always null
-        if (MainController.getInstance().getResponse() != null)
-            view.onUserInfo(MainController.getInstance().getResponse());
-
+            @Override
+            public void onFailure(String error) {
+                view.showError(error);
+            }
+        });
     }
 
     @Override

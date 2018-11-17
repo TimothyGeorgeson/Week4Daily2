@@ -1,7 +1,10 @@
 package com.example.consultants.week4daily2.model.data.remote;
 
 import com.example.consultants.week4daily2.model.githubresponse.GithubResponse;
+import com.example.consultants.week4daily2.model.githubresponse.RepoResponse;
 import com.example.consultants.week4daily2.utils.NetworkHelper;
+
+import java.util.List;
 
 import io.reactivex.Observable;
 import retrofit2.Call;
@@ -22,18 +25,17 @@ public class RemoteDataSource {
                 .build();
     }
 
-    private  RemoteService getRemoteService() {
+    private RemoteService getRemoteService() {
         return createInstance().create(RemoteService.class);
     }
 
     //use call object
     public Call<GithubResponse> getUserInfo(String login) {
-
         return getRemoteService().getUserInfo(login);
     }
 
     //using rxjava
-    public Observable<GithubResponse> getUserInfoObs(String username) {
-        return getRemoteService().getRandomUserObs(username);
+    public Observable<List<RepoResponse>> getRepositoriesObs(String username) {
+        return getRemoteService().getRepositoriesObs(username);
     }
 }
