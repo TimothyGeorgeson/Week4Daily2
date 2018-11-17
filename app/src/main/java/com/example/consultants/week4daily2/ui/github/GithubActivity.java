@@ -11,9 +11,11 @@ import android.widget.TextView;
 import com.example.consultants.week4daily2.R;
 import com.example.consultants.week4daily2.model.data.GithubRepository;
 import com.example.consultants.week4daily2.model.data.local.LocalDataSource;
+import com.example.consultants.week4daily2.model.data.local.MyRepo;
 import com.example.consultants.week4daily2.model.data.remote.RemoteDataSource;
 import com.example.consultants.week4daily2.model.githubresponse.RepoResponse;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GithubActivity extends AppCompatActivity implements GithubContract.View {
@@ -69,10 +71,19 @@ public class GithubActivity extends AppCompatActivity implements GithubContract.
 
     @Override
     public void onRepos(List<RepoResponse> repoList) {
+        //loop through network response and put data into my own Repo class
+        //which is a Parcelable so it can transfer to the next activity
+        ArrayList<MyRepo> myRepoList = new ArrayList<>();
         for (int i = 0; i < repoList.size(); i++) {
-            Log.d(TAG, "onRepos: " + repoList.get(i).getName());
+            MyRepo myRepo = new MyRepo(repoList.get(i).getName(),
+                    repoList.get(i).getCreatedAt(),
+                    repoList.get(i).getDefaultBranch());
+            myRepoList.add(myRepo);
         }
 
+        //use intent to send list of repos to next screen
         Intent intent = new Intent(this, RepoActivity.class);
+        intent.putParcelableArrayListExtra("repos", myRepoList);
+        startActivity(intent);
     }
 }
